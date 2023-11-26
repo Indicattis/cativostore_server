@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 
-const port = 9002
+const port = 9001
 
 app.get('/', (req, res) =>{
     return res.json(`CATIVOSTORE_SERVER is on port:${port}`);
