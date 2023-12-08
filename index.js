@@ -14,7 +14,7 @@ app.get('/', (req, res) =>{
 });
 
 app.get('/products', (req, res) => {
-    const sql = `SELECT * FROM products`;
+    const sql = `SELECT * FROM CSD_PRODUCTS`;
     db.query(sql, (err, result) => {
         if (err) return res.json({ Message: "Não foi possível consultar os produtos" });
         return res.json(result);
@@ -22,7 +22,7 @@ app.get('/products', (req, res) => {
 })
 app.get('/product/:id', (req, res) => {
     const id = req.params.id;
-    const sql = `SELECT * FROM products WHERE id = ?`;
+    const sql = `SELECT * FROM CSD_PRODUCTS WHERE id = ?`;
     
     db.query(sql, [id], (err, result) => {
         if (err) return res.json({ Message: "Não foi possível consultar o produto" });
@@ -34,8 +34,13 @@ app.put('/product_update/:id', (req, res) => {
     const id = req.params.id;
     const { title, description, price, offer, status } = req.body;
 
-    const sqlUpdate = `UPDATE products
-                       SET title = ?, description = ?, price = ?, offer = ?, status = ?
+    const sqlUpdate = `UPDATE CSD_PRODUCTS
+                       SET prod_name = ?, 
+                       prod_description = ?, 
+                       prod_price = ?, 
+                       prod_offer = ?, 
+                       prod_status = ?,
+                       prod_stock = 1
                        WHERE id = ?`;
 
     db.query(sqlUpdate, [title, description, price, offer, status, id], (err, result) => {
@@ -51,8 +56,14 @@ app.put('/product_update/:id', (req, res) => {
 app.post('/product_insert', (req, res) => {
     const { title, description, price, offer, status } = req.body;
 
-    const sql = `INSERT INTO products (title, description, price, offer, status)
-    VALUES (?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO CSD_PRODUCTS (
+                prod_name, 
+                prod_description, 
+                prod_price, 
+                prod_offer, 
+                prod_status,
+                prod_stock)
+                VALUES (?, ?, ?, ?, ?)`;
 
     db.query(sql, [title, description, price, offer, status], (err, result) => {
         if (err) {
@@ -67,7 +78,7 @@ app.post('/product_insert', (req, res) => {
 app.post('/product_delete/:id', (req, res) => {
     const id = req.params.id;
 
-    const sql = `DELETE FROM products WHERE id = ?`;
+    const sql = `DELETE FROM CSD_PRODUCTS WHERE id = ?`;
 
     db.query(sql, [id], (err, result) => {
         if (err) {
